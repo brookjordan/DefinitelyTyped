@@ -3180,9 +3180,9 @@ declare global {
             // SVG
             svg: React.SVGProps<SVGSVGElement>;
 
-            animate: React.SVGProps<SVGElement>; // TODO: It is SVGAnimateElement but is not in TypeScript's lib.dom.d.ts for now.
-            animateMotion: React.SVGProps<SVGElement>;
-            animateTransform: React.SVGProps<SVGElement>; // TODO: It is SVGAnimateTransformElement but is not in TypeScript's lib.dom.d.ts for now.
+            animate: React.SVGProps<SVGAnimateElement>;
+            animateMotion: React.SVGProps<SVGAnimateMotionElement>;
+            animateTransform: React.SVGProps<SVGAnimateTransformElement>;
             circle: React.SVGProps<SVGCircleElement>;
             clipPath: React.SVGProps<SVGClipPathElement>;
             defs: React.SVGProps<SVGDefsElement>;

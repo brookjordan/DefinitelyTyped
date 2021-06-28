@@ -144,6 +144,9 @@ interface SVGTextPathElement extends SVGElement { }
 interface SVGTSpanElement extends SVGElement { }
 interface SVGUseElement extends SVGElement { }
 interface SVGViewElement extends SVGElement { }
+interface SVGAnimateElement extends SVGElement { }
+interface SVGAnimateMotionElement extends SVGElement { }
+interface SVGAnimateTransformElement extends SVGElement { }
 
 interface Text { }
 interface TouchList { }
