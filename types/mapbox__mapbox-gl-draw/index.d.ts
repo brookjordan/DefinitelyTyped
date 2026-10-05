@@ -1,15 +1,5 @@
 import { BBox, Feature, FeatureCollection, GeoJSON, GeoJsonTypes, Geometry, Point, Position } from "geojson";
-import {
-    CircleLayerSpecification,
-    ControlPosition,
-    FillLayerSpecification,
-    IControl,
-    LineLayerSpecification,
-    Map,
-    MapEvent,
-    MapMouseEvent as MapboxMapMouseEvent,
-    MapTouchEvent as MapboxMapTouchEvent,
-} from "mapbox-gl";
+import "mapbox-gl";
 
 export = MapboxDraw;
 export as namespace MapboxDraw;
@@ -24,9 +14,11 @@ type EventOf<T extends MapboxDraw.DrawEventType, Target = unknown> = keyof Mapbo
     } & MapboxDraw.DrawEvents[T];
 
 declare module "mapbox-gl" {
-    interface Map {
-        on<T extends MapboxDraw.DrawEventType>(type: T, listener: (event: EventOf<T>) => void): this;
-        off<T extends MapboxDraw.DrawEventType>(type: T, listener: (event: EventOf<T>) => void): this;
+    namespace mapboxgl {
+        interface Map {
+            on<T extends MapboxDraw.DrawEventType>(type: T, listener: (event: EventOf<T>) => void): this;
+            off<T extends MapboxDraw.DrawEventType>(type: T, listener: (event: EventOf<T>) => void): this;
+        }
     }
 }
 
@@ -133,16 +125,16 @@ declare namespace MapboxDraw {
         | DrawMultiFeature<"MultiLineString">
         | DrawMultiFeature<"MultiPolygon">;
 
-    interface MapMouseEvent extends MapboxMapMouseEvent {
+    interface MapMouseEvent extends mapboxgl.MapMouseEvent {
         featureTarget: DrawFeature;
     }
 
-    interface MapTouchEvent extends MapboxMapTouchEvent {
+    interface MapTouchEvent extends mapboxgl.MapTouchEvent {
         featureTarget: DrawFeature;
     }
 
     interface DrawEvent {
-        target: Map;
+        target: mapboxgl.Map;
         type: DrawEventType;
     }
 
@@ -197,7 +189,7 @@ declare namespace MapboxDraw {
     }
 
     interface DrawCustomModeThis {
-        map: Map;
+        map: mapboxgl.Map;
 
         drawConfig: MapboxDrawOptions;
 
@@ -408,13 +400,13 @@ declare namespace MapboxDraw {
             isOfMetaType: (
                 type: Constants["meta"][keyof Constants["meta"]],
             ) => (e: MapMouseEvent | MapTouchEvent) => boolean;
-            isShiftMousedown: (e: MapEvent) => boolean;
+            isShiftMousedown: (e: mapboxgl.MapEvent) => boolean;
             isActiveFeature: (e: MapMouseEvent | MapTouchEvent) => boolean;
             isInactiveFeature: (e: MapMouseEvent | MapTouchEvent) => boolean;
             noTarget: (e: MapMouseEvent | MapTouchEvent) => boolean;
             isFeature: (e: MapMouseEvent | MapTouchEvent) => boolean;
             isVertex: (e: MapMouseEvent | MapTouchEvent) => boolean;
-            isShiftDown: (e: MapEvent) => boolean;
+            isShiftDown: (e: mapboxgl.MapEvent) => boolean;
             isEscapeKey: (e: KeyboardEvent) => boolean;
             isEnterKey: (e: KeyboardEvent) => boolean;
             isTrue: () => boolean;
@@ -523,7 +515,9 @@ declare namespace MapboxDraw {
         StringSet(items?: Array<string | number>): StringSet;
 
         theme: Array<
-            (FillLayerSpecification | LineLayerSpecification | CircleLayerSpecification) & { id: ThemeLayerId }
+            (mapboxgl.FillLayerSpecification | mapboxgl.LineLayerSpecification | mapboxgl.CircleLayerSpecification) & {
+                id: ThemeLayerId;
+            }
         >;
 
         /**
@@ -566,14 +560,14 @@ declare namespace MapboxDraw {
     }
 }
 
-declare class MapboxDraw implements IControl {
+declare class MapboxDraw implements mapboxgl.IControl {
     static modes: MapboxDraw.Modes;
     static constants: MapboxDraw.Constants;
     static lib: MapboxDraw.Lib;
 
     modes: MapboxDraw.DrawModes;
 
-    getDefaultPosition: () => ControlPosition;
+    getDefaultPosition: () => mapboxgl.ControlPosition;
 
     constructor(options?: MapboxDraw.MapboxDrawOptions);
 
@@ -616,7 +610,7 @@ declare class MapboxDraw implements IControl {
 
     setFeatureProperty(featureId: string, property: string, value: any): this;
 
-    onAdd(map: Map): HTMLElement;
+    onAdd(map: mapboxgl.Map): HTMLElement;
 
-    onRemove(map: Map): any;
+    onRemove(map: mapboxgl.Map): any;
 }
